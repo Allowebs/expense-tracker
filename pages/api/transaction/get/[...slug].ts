@@ -16,13 +16,35 @@ const getTransactionsInRange = async (
 
     const result = await prisma.transaction.findMany({
       where: {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
+        OR: [
+          {
+            // For Income transactions, ignore the date range
+            source: {
+              type: "Income", // Match the string directly
+            },
+          },
+          {
+            // For other types, apply the date range filter
+            AND: [
+              {
+                createdAt: {
+                  gte: startDate,
+                  lte: endDate,
+                },
+              },
+              {
+                source: {
+                  type: {
+                    not: "Income", // Match the string directly for not Income
+                  },
+                },
+              },
+            ],
+          },
+        ],
       },
       include: {
-        source: true,
+        source: true, // Include source details in the result
       },
     });
     res.status(200).json(result);

@@ -37,8 +37,6 @@ export default function Home(
     )
   );
 
-  // Removed onMonthChangeHandler because it's no longer needed with the updated API logic
-
   return (
     <>
       <Head>
@@ -105,16 +103,21 @@ export default function Home(
   );
 }
 
-// Adjusted getServerSideProps to fetch data for the current date to 30 days into the future.
 export async function getServerSideProps() {
-  // API URL adjusted assuming your environment variable points to your API server
-  const apiUrl = `${process.env.API_URL}/api/transaction/get`; // Adjust if your endpoint differs
-  const response = await axios.get(apiUrl);
+  const apiUrl = `${process.env.API_URL}/api/transaction/get`;
+  // Example: Adjust to include query parameters if your API supports filtering by dates or types
+  const response = await axios.get(apiUrl, {
+    params: {
+      // Example params, adjust according to your API's capability
+      startDate: dayjs().toISOString(),
+      endDate: dayjs().add(30, "day").toISOString()
+    }
+  });
   const transactions = response.data;
 
   return {
     props: {
-      transactions: transactions // Ensure your API sends back the appropriate data structure
+      transactions
     }
   };
 }

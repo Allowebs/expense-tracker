@@ -10,22 +10,46 @@ const getTransactions = async (req: NextApiRequest, res: NextApiResponse) => {
     const startDate = dayjs().toISOString();
     const endDate = dayjs().add(30, 'day').toISOString();
 
-    // Fetch transactions that were created within this date range
+    // Fetch transactions, for Income transactions ignore the date range
     const result = await prisma.transaction.findMany({
       where: {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
+        OR: [
+          {
+            // Include all transactions of type "Income" regardless of the date
+            source: {
+              type: "Income", // Assuming 'Income' is the correct identifier in your database
+            },
+          },
+          {
+            // For other transactions, apply the date range filter
+            AND: [
+              {
+                createdAt: {
+                  gte: startDate,
+                  lte: endDate,
+                },
+              },
+              {
+                source: {
+                  type: {
+                    not: "Income", // Exclude "Income" transactions from this date filter
+                  },
+                },
+              },
+            ],
+          },
+        ],
       },
-      include: { source: true },
+      include: {
+        source: true, // Include source details
+      },
     });
 
     res.status(200).json(result);
   } catch (err) {
-    console.log(err);
+    console.error(err); // Changed to console.error for better error logging
     res.status(500).json({
-      err: "Error occurred while getting transactions.",
+      error: "Error occurred while getting transactions.", // Changed 'err' to 'error' for consistency
     });
   }
 };
