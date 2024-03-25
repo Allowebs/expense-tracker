@@ -1,3 +1,5 @@
+import { TransactionDataType, TransactionType } from "@/types";
+import { CardContent, CardHeader, Paper } from "@mui/material";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -7,12 +9,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useState } from "react";
-import { CreateSourceModal } from "./CreateSourceModal";
-import { AddTransactionModal } from "./AddTransactionModal";
 import dayjs from "dayjs";
-import { TransactionDataType, TransactionType } from "@/types";
-import { CardContent, CardHeader, Paper } from "@mui/material";
+import { useState } from "react";
+import { AddTransactionModal } from "./AddTransactionModal";
+import { CreateSourceModal } from "./CreateSourceModal";
 
 type InvestmentTableType = {
   investments: TransactionDataType[];
@@ -21,11 +21,11 @@ type InvestmentTableType = {
 
 export const InvestmentTable = ({
   investments,
-  setInvestments,
+  setInvestments
 }: InvestmentTableType) => {
   const [
     isCreateInvestmentSourceModalVisible,
-    setIsCreateInvestmentSourceModalVisible,
+    setIsCreateInvestmentSourceModalVisible
   ] = useState<boolean>(false);
   const [isAddInvestmentModalVisible, setIsAddInvestmentModalVisible] =
     useState<boolean>(false);
@@ -44,21 +44,20 @@ export const InvestmentTable = ({
         )}`}
         subheaderTypographyProps={{
           style: {
-            fontWeight: "bold",
-          },
+            fontWeight: "bold"
+          }
         }}
       />
       <CardContent style={{ padding: 0 }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}
-        >
+          sx={{ maxHeight: 320, overflowY: "scroll" }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Source</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell align="right">Amount(₹)</TableCell>
+                <TableCell align="right">Amount($)</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

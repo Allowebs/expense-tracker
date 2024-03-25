@@ -1,3 +1,5 @@
+import { TransactionDataType, TransactionType } from "@/types";
+import { Card, CardContent, CardHeader, Paper } from "@mui/material";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
 import Table from "@mui/material/Table";
@@ -6,18 +8,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import React, { useState } from "react";
-import { CreateSourceModal } from "./CreateSourceModal";
-import { AddTransactionModal } from "./AddTransactionModal";
-import { TransactionDataType, TransactionType } from "@/types";
 import dayjs from "dayjs";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Paper,
-  TableFooter,
-} from "@mui/material";
+import React, { useState } from "react";
+import { AddTransactionModal } from "./AddTransactionModal";
+import { CreateSourceModal } from "./CreateSourceModal";
 
 type ExpenseTableType = {
   expenses: TransactionDataType[];
@@ -44,21 +38,20 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
         )}`}
         subheaderTypographyProps={{
           style: {
-            fontWeight: "bold",
-          },
+            fontWeight: "bold"
+          }
         }}
       />
       <CardContent style={{ padding: 0 }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}
-        >
+          sx={{ maxHeight: 320, overflowY: "scroll" }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell>Source</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell align="right">Amount(₹)</TableCell>
+                <TableCell align="right">Amount($)</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
