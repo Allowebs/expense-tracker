@@ -5,12 +5,14 @@ const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const transactionId = req.query.id;
 
   if (!transactionId || typeof transactionId !== "string") {
-    return res.status(400).json({ message: "Transaction ID must be provided and be a string." });
+    return res
+      .status(400)
+      .json({ message: "Transaction ID must be provided and be a string." });
   }
 
   try {
