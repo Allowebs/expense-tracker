@@ -3,22 +3,22 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" // Changed from "mongodb" to "postgresql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Source {
-  id          String        @id @default(uuid()) // Changed from @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  id          String        @id @default(uuid())
+  name        String        @unique
   type        String
-  Transaction Transaction[] // Relation to Transaction is maintained, no changes needed.
+  Transaction Transaction[]
 }
 
 model Transaction {
-  id        String   @id @default(uuid()) // Adjusted for PostgreSQL with UUIDs.
-  sourceId  String // Reference to Source ID. In PostgreSQL, this can be a UUID.
-  createdAt DateTime @default(now()) // No change, as DateTime maps well to PostgreSQL.
-  source    Source   @relation(fields: [sourceId], references: [id]) // Relation definition remains the same.
-  amount    Int // No change needed, directly supported in PostgreSQL.
-  received  Boolean  @default(false) // No change, as Boolean is a supported type in PostgreSQL.
+  id        String   @id @default(uuid())
+  sourceId  String
+  createdAt DateTime @default(now())
+  source    Source   @relation(fields: [sourceId], references: [id])
+  amount    Int
+  received  Boolean  @default(false)
 }
