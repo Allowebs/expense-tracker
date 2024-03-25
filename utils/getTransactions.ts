@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 export const getTransactions = async (
   prisma: PrismaClient,
   month: number,
-  year: number
+  year: number,
 ) => {
   try {
     const endDate = dayjs(`${year}-${month}`).endOf("month").toISOString();

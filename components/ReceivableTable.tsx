@@ -1,19 +1,27 @@
 import { TransactionDataType, TransactionType } from "@/types";
-import { CardContent, CardHeader, Paper } from "@mui/material";
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import Checkbox from "@mui/material/Checkbox";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import dayjs from "dayjs";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AddTransactionModal } from "./AddTransactionModal";
 import { CreateSourceModal } from "./CreateSourceModal";
+import EditTransactionModal from "./EditTransactionModal";
 
 type ReceivableTableType = {
   receivables: TransactionDataType[];
@@ -22,17 +30,62 @@ type ReceivableTableType = {
 
 export const ReceivableTable = ({
   receivables,
-  setReceivables
+  setReceivables,
 }: ReceivableTableType) => {
   const [
     isCreateReceivableSourceModalVisible,
-    setIsCreateReceivableSourceModalVisible
+    setIsCreateReceivableSourceModalVisible,
   ] = useState<boolean>(false);
   const [isAddReceivableModalVisible, setIsAddReceivableModalVisible] =
     useState<boolean>(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
+  const [editingReceivable, setEditingReceivable] =
+    useState<TransactionDataType | null>(null);
 
   const addReceivable = (data: TransactionDataType) => {
     setReceivables((prevReceivable) => [...prevReceivable, data]);
+  };
+
+  const deleteReceivable = (id: string) => {
+    setReceivables((prevReceivable) =>
+      prevReceivable.filter((receivable) => receivable.id !== id),
+    );
+  };
+
+  const editReceivable = (data: TransactionDataType) => {
+    setReceivables((prevReceivable) =>
+      prevReceivable.map((receivable) =>
+        receivable.id === data.id ? data : receivable,
+      ),
+    );
+  };
+
+  const togglePaidStatus = (id: string, paidStatus: boolean) => {
+    setReceivables((prevReceivable) =>
+      prevReceivable.map((receivable) =>
+        receivable.id === id
+          ? { ...receivable, received: paidStatus }
+          : receivable,
+      ),
+    );
+  };
+
+  const handleEdit = (receivable: TransactionDataType) => {
+    setEditingReceivable(receivable);
+    setIsEditModalVisible(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/transaction/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Error deleting transaction");
+      deleteReceivable(id);
+    } catch (error) {
+      console.error("Failed to delete transaction:", error);
+      // Handle error (e.g., show an error message)
+    }
   };
 
   return (
@@ -41,18 +94,15 @@ export const ReceivableTable = ({
         title={TransactionType.receivable}
         subheader={`Total - ${receivables.reduce(
           (acc, receivable) => acc + receivable.amount,
-          0
+          0,
         )}`}
-        subheaderTypographyProps={{
-          style: {
-            fontWeight: "bold"
-          }
-        }}
+        subheaderTypographyProps={{ style: { fontWeight: "bold" } }}
       />
       <CardContent style={{ padding: 0 }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}>
+          sx={{ maxHeight: 320, overflowY: "scroll" }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -60,23 +110,35 @@ export const ReceivableTable = ({
                 <TableCell>Date</TableCell>
                 <TableCell align="right">Amount($)</TableCell>
                 <TableCell>Paid</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {receivables.map((receivable) => {
-                return (
-                  <TableRow key={receivable.id}>
-                    <TableCell>{receivable.source.name}</TableCell>
-                    <TableCell>
-                      {dayjs(receivable.createdAt).format("DD-MM-YYYY")}
-                    </TableCell>
-                    <TableCell align="right">{receivable.amount}</TableCell>
-                    <TableCell>
-                      <Checkbox />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {receivables.map((receivable) => (
+                <TableRow key={receivable.id}>
+                  <TableCell>{receivable.source.name}</TableCell>
+                  <TableCell>
+                    {dayjs(receivable.createdAt).format("DD-MM-YYYY")}
+                  </TableCell>
+                  <TableCell align="right">{receivable.amount}</TableCell>
+                  <TableCell>
+                    <Checkbox
+                      checked={receivable.received}
+                      onChange={(event) =>
+                        togglePaidStatus(receivable.id, event.target.checked)
+                      }
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleEdit(receivable)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => deleteReceivable(receivable.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -100,6 +162,14 @@ export const ReceivableTable = ({
         isAddSourceModalVisible={isAddReceivableModalVisible}
         setIsAddSourceModalVisible={setIsAddReceivableModalVisible}
       />
+      {editingReceivable && (
+        <EditTransactionModal
+          income={editingReceivable} // Note: You might need to adjust the props and handling inside EditTransactionModal for different transaction types.
+          editIncome={editReceivable}
+          isEditModalVisible={isEditModalVisible}
+          setIsEditModalVisible={setIsEditModalVisible}
+        />
+      )}
     </Card>
   );
 };

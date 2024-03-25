@@ -31,5 +31,8 @@
     "react-dom": "18.2.0",
     "react-google-charts": "^4.0.1",
     "typescript": "5.4.3"
+  },
+  "devDependencies": {
+    "prettier": "3.2.5"
   }
 }

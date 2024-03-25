@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 const getTransactionsByType = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   try {
     const { slug } = req.query;

@@ -1,3 +1,5 @@
+import { TransactionDataType, TransactionType } from "@/types";
+import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button from "@mui/material/Button";
@@ -13,14 +15,12 @@ import Modal from "@mui/material/Modal";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
-import CloseIcon from "@mui/icons-material/Close";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Source } from "@prisma/client";
+import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { Source } from "@prisma/client";
-import { TransactionType, TransactionDataType } from "@/types";
-import axios from "axios";
 
 type AddTransactionModalType = {
   source: TransactionType;
@@ -38,7 +38,7 @@ export const AddTransactionModal = ({
   const [sources, setSources] = useState<Source[]>([]);
   const [selectedSource, setSelectedSource] = useState<Source | null>(null);
   const [transactionDate, setTransactionDate] = useState<Date | undefined>(
-    undefined
+    undefined,
   );
   const [amount, setAmount] = useState<number>(0);
   const [isTransactionCreated, setIsTransactionCreated] =
@@ -52,7 +52,7 @@ export const AddTransactionModal = ({
           sourceId: selectedSource?.id,
           amount,
           createdAt: transactionDate,
-        }
+        },
       );
       if (response.status === 200) {
         setIsAddSourceModalVisible(false);
@@ -72,7 +72,7 @@ export const AddTransactionModal = ({
   useEffect(() => {
     const getSourcesByType = async () => {
       const response = await axios.get(
-        `${process.env.API_URL}/api/source/get/${source}`
+        `${process.env.API_URL}/api/source/get/${source}`,
       );
       const data = await response.data;
       setSources(data);
