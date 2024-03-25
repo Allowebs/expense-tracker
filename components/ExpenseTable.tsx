@@ -1,3 +1,4 @@
+// components/ExpenseTable.tsx
 import { TransactionDataType, TransactionType } from "@/types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -14,10 +15,10 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow
 } from "@mui/material";
 import dayjs from "dayjs";
-import { default as React, useState } from "react";
+import React, { useState } from "react";
 import { AddTransactionModal } from "./AddTransactionModal";
 import { CreateSourceModal } from "./CreateSourceModal";
 import EditTransactionModal from "./EditTransactionModal"; // Make sure you have this component
@@ -40,15 +41,25 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
     setExpenses((prevExpenses) => [...prevExpenses, data]);
   };
 
-  const deleteExpense = (id: string) => {
-    setExpenses((prevExpenses) =>
-      prevExpenses.filter((expense) => expense.id !== id),
-    );
+  const deleteExpense = async (id: string) => {
+    try {
+      const response = await fetch(`/api/transaction/${id}`, {
+        method: "DELETE"
+      });
+      if (!response.ok) throw new Error("Error deleting transaction");
+      // Filter out the deleted expense from the local state to update the UI
+      setExpenses((prevExpenses) =>
+        prevExpenses.filter((expense) => expense.id !== id)
+      );
+    } catch (error) {
+      console.error("Failed to delete transaction:", error);
+      // Handle error (e.g., show an error message)
+    }
   };
 
   const editExpense = (data: TransactionDataType) => {
     setExpenses((prevExpenses) =>
-      prevExpenses.map((expense) => (expense.id === data.id ? data : expense)),
+      prevExpenses.map((expense) => (expense.id === data.id ? data : expense))
     );
   };
 
@@ -57,35 +68,20 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
     setIsEditModalVisible(true);
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`/api/transaction/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) throw new Error("Error deleting transaction");
-      // Filter out the deleted expense from the local state to update the UI
-      setExpenses((prev) => prev.filter((expense) => expense.id !== id));
-    } catch (error) {
-      console.error("Failed to delete transaction:", error);
-      // Handle error (e.g., show an error message)
-    }
-  };
-
   return (
     <Card>
       <CardHeader
         title={TransactionType.expense}
         subheader={`Total - ${expenses.reduce(
           (acc, expense) => acc + expense.amount,
-          0,
+          0
         )}`}
         subheaderTypographyProps={{ style: { fontWeight: "bold" } }}
       />
       <CardContent style={{ padding: 0 }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}
-        >
+          sx={{ maxHeight: 320, overflowY: "scroll" }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -138,7 +134,7 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
       />
       {editingExpense && (
         <EditTransactionModal
-          income={editingExpense}
+          income={editingExpense} // Note: You might need to adjust the props and handling inside EditTransactionModal for different transaction types.
           editIncome={editExpense}
           isEditModalVisible={isEditModalVisible}
           setIsEditModalVisible={setIsEditModalVisible}

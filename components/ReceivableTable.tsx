@@ -1,3 +1,4 @@
+// components/ReceivableTable.tsx
 import { TransactionDataType, TransactionType } from "@/types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -15,7 +16,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow
 } from "@mui/material";
 import dayjs from "dayjs";
 import React, { useState } from "react";
@@ -30,11 +31,11 @@ type ReceivableTableType = {
 
 export const ReceivableTable = ({
   receivables,
-  setReceivables,
+  setReceivables
 }: ReceivableTableType) => {
   const [
     isCreateReceivableSourceModalVisible,
-    setIsCreateReceivableSourceModalVisible,
+    setIsCreateReceivableSourceModalVisible
   ] = useState<boolean>(false);
   const [isAddReceivableModalVisible, setIsAddReceivableModalVisible] =
     useState<boolean>(false);
@@ -48,15 +49,15 @@ export const ReceivableTable = ({
 
   const deleteReceivable = (id: string) => {
     setReceivables((prevReceivable) =>
-      prevReceivable.filter((receivable) => receivable.id !== id),
+      prevReceivable.filter((receivable) => receivable.id !== id)
     );
   };
 
   const editReceivable = (data: TransactionDataType) => {
     setReceivables((prevReceivable) =>
       prevReceivable.map((receivable) =>
-        receivable.id === data.id ? data : receivable,
-      ),
+        receivable.id === data.id ? data : receivable
+      )
     );
   };
 
@@ -65,8 +66,8 @@ export const ReceivableTable = ({
       prevReceivable.map((receivable) =>
         receivable.id === id
           ? { ...receivable, received: paidStatus }
-          : receivable,
-      ),
+          : receivable
+      )
     );
   };
 
@@ -78,31 +79,29 @@ export const ReceivableTable = ({
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/transaction/${id}`, {
-        method: "DELETE",
+        method: "DELETE"
       });
       if (!response.ok) throw new Error("Error deleting transaction");
       deleteReceivable(id);
     } catch (error) {
       console.error("Failed to delete transaction:", error);
-      // Handle error (e.g., show an error message)
     }
   };
 
   return (
     <Card>
       <CardHeader
-        title={TransactionType.receivable}
+        title="Receivable"
         subheader={`Total - ${receivables.reduce(
           (acc, receivable) => acc + receivable.amount,
-          0,
+          0
         )}`}
         subheaderTypographyProps={{ style: { fontWeight: "bold" } }}
       />
       <CardContent style={{ padding: 0 }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}
-        >
+          sx={{ maxHeight: 320, overflowY: "scroll" }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -133,7 +132,7 @@ export const ReceivableTable = ({
                     <IconButton onClick={() => handleEdit(receivable)}>
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => deleteReceivable(receivable.id)}>
+                    <IconButton onClick={() => handleDelete(receivable.id)}>
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>

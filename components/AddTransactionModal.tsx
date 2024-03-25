@@ -1,4 +1,5 @@
-import { TransactionDataType, TransactionType } from "@/types";
+// components/AddTransactionModal.tsx
+import { Source, TransactionDataType, TransactionType } from "@/types";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -17,7 +18,6 @@ import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Source } from "@prisma/client";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -33,12 +33,12 @@ export const AddTransactionModal = ({
   source,
   isAddSourceModalVisible,
   setIsAddSourceModalVisible,
-  addTransaction,
+  addTransaction
 }: AddTransactionModalType) => {
   const [sources, setSources] = useState<Source[]>([]);
   const [selectedSource, setSelectedSource] = useState<Source | null>(null);
-  const [transactionDate, setTransactionDate] = useState<Date | undefined>(
-    undefined,
+  const [transactionDate, setTransactionDate] = useState<Date | null>(
+    new Date()
   );
   const [amount, setAmount] = useState<number>(0);
   const [isTransactionCreated, setIsTransactionCreated] =
@@ -51,8 +51,8 @@ export const AddTransactionModal = ({
         {
           sourceId: selectedSource?.id,
           amount,
-          createdAt: transactionDate,
-        },
+          createdAt: transactionDate
+        }
       );
       if (response.status === 200) {
         setIsAddSourceModalVisible(false);
@@ -71,11 +71,15 @@ export const AddTransactionModal = ({
 
   useEffect(() => {
     const getSourcesByType = async () => {
-      const response = await axios.get(
-        `${process.env.API_URL}/api/source/get/${source}`,
-      );
-      const data = await response.data;
-      setSources(data);
+      try {
+        const response = await axios.get(
+          `${process.env.API_URL}/api/source/get/${source}`
+        );
+        const data: Source[] = response.data;
+        setSources(data);
+      } catch (error) {
+        console.log(error);
+      }
     };
     if (isAddSourceModalVisible) {
       getSourcesByType();
@@ -90,14 +94,9 @@ export const AddTransactionModal = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Card
-          style={{
-            width: 400,
-          }}
-        >
+          alignItems: "center"
+        }}>
+        <Card style={{ width: 400 }}>
           <CardHeader
             title={cardHeaderTitle}
             subheader={cardHeaderSubHeader}
@@ -125,10 +124,15 @@ export const AddTransactionModal = ({
               <DatePicker
                 label={`${source} date`}
                 format="DD-MM-YYYY"
-                defaultValue={dayjs(new Date())}
-                onChange={(value) => setTransactionDate(value?.toDate())}
+                value={transactionDate ? dayjs(transactionDate) : null}
+                onChange={(value) =>
+                  setTransactionDate(
+                    value && dayjs(value).isValid() ? value.toDate() : null
+                  )
+                }
               />
             </LocalizationProvider>
+
             <FormControl fullWidth style={{ marginTop: 20 }}>
               <InputLabel htmlFor={`${source}-source-amount`}>
                 Amount
@@ -138,10 +142,8 @@ export const AddTransactionModal = ({
                 label="Amount"
                 size="medium"
                 type="number"
-                value={amount.toString()}
-                onChange={(event) => {
-                  setAmount(parseInt(event.target.value));
-                }}
+                value={amount}
+                onChange={(event) => setAmount(parseInt(event.target.value))}
                 startAdornment={
                   <InputAdornment position="start">₹</InputAdornment>
                 }
@@ -156,8 +158,7 @@ export const AddTransactionModal = ({
       <Snackbar
         open={isTransactionCreated}
         autoHideDuration={3000}
-        onClose={() => setIsTransactionCreated(false)}
-      >
+        onClose={() => setIsTransactionCreated(false)}>
         <Alert severity="success">{`${source} added successfully!`}</Alert>
       </Snackbar>
     </>

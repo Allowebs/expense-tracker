@@ -2,7 +2,6 @@ import { AppHeader } from "@/components/AppHeader";
 import { ExpensePieChart } from "@/components/ExpensePieChart";
 import { ExpenseTable } from "@/components/ExpenseTable";
 import { IncomeTable } from "@/components/IncomeTable";
-import { InvestmentTable } from "@/components/InvestmentTable";
 import { ReceivableTable } from "@/components/ReceivableTable";
 import styles from "@/styles/Home.module.css";
 import { TransactionDataType, TransactionType } from "@/types";
@@ -19,61 +18,49 @@ import Head from "next/head";
 import { useState } from "react";
 
 export default function Home(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const [incomes, setIncomes] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: { source: { type: TransactionType } }) =>
-        transaction.source.type === TransactionType.income,
-    ),
+        transaction.source.type === TransactionType.income
+    )
   );
   const [expenses, setExpenses] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: { source: { type: TransactionType } }) =>
-        transaction.source.type === TransactionType.expense,
-    ),
-  );
-  const [investments, setInvestments] = useState<TransactionDataType[]>(
-    props.transactions.filter(
-      (transaction: { source: { type: TransactionType } }) =>
-        transaction.source.type === TransactionType.investment,
-    ),
+        transaction.source.type === TransactionType.expense
+    )
   );
   const [receivables, setReceivables] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: { source: { type: TransactionType } }) =>
-        transaction.source.type === TransactionType.receivable,
-    ),
+        transaction.source.type === TransactionType.receivable
+    )
   );
 
   const onMonthChangeHandler = async (month: number, year: number) => {
     const response = await axios.get(
-      `${process.env.API_URL}/api/transaction/get/${month}/${year}`,
+      `${process.env.API_URL}/api/transaction/get/${month}/${year}`
     );
     const data = response.data;
     setIncomes(
       data.filter(
         (transaction: TransactionDataType) =>
-          transaction.source.type === TransactionType.income,
-      ),
+          transaction.source.type === TransactionType.income
+      )
     );
     setExpenses(
       data.filter(
         (transaction: TransactionDataType) =>
-          transaction.source.type === TransactionType.expense,
-      ),
-    );
-    setInvestments(
-      data.filter(
-        (transaction: TransactionDataType) =>
-          transaction.source.type === TransactionType.investment,
-      ),
+          transaction.source.type === TransactionType.expense
+      )
     );
     setReceivables(
       data.filter(
         (transaction: TransactionDataType) =>
-          transaction.source.type === TransactionType.receivable,
-      ),
+          transaction.source.type === TransactionType.receivable
+      )
     );
   };
 
@@ -105,24 +92,19 @@ export default function Home(
                   fontWeight="500"
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                  }}
-                >
+                    alignItems: "center"
+                  }}>
                   <CalendarMonthIcon style={{ marginRight: 10 }} />
                   {dayjs(new Date()).format("DD-MM-YYYY")}
                 </Typography>
                 <ExpensePieChart
                   totalIncome={incomes.reduce(
                     (acc, income) => acc + income.amount,
-                    0,
+                    0
                   )}
                   totalExpense={expenses.reduce(
                     (acc, expense) => acc + expense.amount,
-                    0,
-                  )}
-                  totalInvestments={investments.reduce(
-                    (acc, investment) => acc + investment.amount,
-                    0,
+                    0
                   )}
                 />
               </Grid>
@@ -133,12 +115,6 @@ export default function Home(
               </Grid>
               <Grid item xs={12}>
                 <ExpenseTable expenses={expenses} setExpenses={setExpenses} />
-              </Grid>
-              <Grid item xs={12}>
-                <InvestmentTable
-                  investments={investments}
-                  setInvestments={setInvestments}
-                />
               </Grid>
               <Grid item xs={12}>
                 <ReceivableTable
@@ -161,11 +137,11 @@ export async function getServerSideProps() {
   const response = await getTransactions(
     prisma,
     currentDate.getMonth() + 1,
-    currentDate.getFullYear(),
+    currentDate.getFullYear()
   );
   return {
     props: {
-      transactions: JSON.parse(JSON.stringify(response)),
-    },
+      transactions: JSON.parse(JSON.stringify(response))
+    }
   };
 }

@@ -1,3 +1,6 @@
+// components/CreateSourceModal.tsx
+import { TransactionType } from "@/types";
+import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -8,10 +11,8 @@ import IconButton from "@mui/material/IconButton";
 import Modal from "@mui/material/Modal";
 import Snackbar from "@mui/material/Snackbar";
 import TextField from "@mui/material/TextField";
-import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
-import { TransactionType } from "@/types";
 import axios from "axios";
+import { useState } from "react";
 
 type CreateSourceModalType = {
   source: TransactionType;
@@ -22,10 +23,11 @@ type CreateSourceModalType = {
 export const CreateSourceModal = ({
   source,
   isCreateSourceModalVisible,
-  setIsCreateSourceModalVisible,
+  setIsCreateSourceModalVisible
 }: CreateSourceModalType) => {
   const [isSourceCreated, setIsSourceCreated] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
+
   const cardHeaderTitle =
     source === TransactionType.income
       ? "Create Payor"
@@ -34,6 +36,7 @@ export const CreateSourceModal = ({
         : source === TransactionType.receivable
           ? "Create Receivable Source"
           : "Create Investment Source";
+
   const cardHeaderSubHeader =
     source === TransactionType.income
       ? "Create the source from whom you will receive the payment."
@@ -49,8 +52,8 @@ export const CreateSourceModal = ({
         `${process.env.API_URL}/api/source/create`,
         {
           name,
-          type: source,
-        },
+          type: source
+        }
       );
       if (response.status === 200) {
         setIsCreateSourceModalVisible(false);
@@ -70,14 +73,12 @@ export const CreateSourceModal = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+          alignItems: "center"
+        }}>
         <Card
           style={{
-            width: 400,
-          }}
-        >
+            width: 400
+          }}>
           <CardHeader
             title={cardHeaderTitle}
             subheader={cardHeaderSubHeader}
@@ -107,8 +108,7 @@ export const CreateSourceModal = ({
       <Snackbar
         open={isSourceCreated}
         autoHideDuration={3000}
-        onClose={() => setIsSourceCreated(false)}
-      >
+        onClose={() => setIsSourceCreated(false)}>
         <Alert severity="success">{`${source} source created successfully!`}</Alert>
       </Snackbar>
     </>
