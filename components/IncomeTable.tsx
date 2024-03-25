@@ -77,9 +77,7 @@ export const IncomeTable = ({ incomes, setIncomes }: IncomeTableType) => {
         subheaderTypographyProps={{ style: { fontWeight: "bold" } }}
       />
       <CardContent style={{ padding: 0 }}>
-        <TableContainer
-          component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}>
+        <TableContainer component={Paper} sx={{ maxHeight: "100%" }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>

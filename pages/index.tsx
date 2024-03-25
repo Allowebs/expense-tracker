@@ -16,25 +16,25 @@ import Head from "next/head";
 import { useState } from "react";
 
 export default function Home(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+  props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const [incomes, setIncomes] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.income,
-    ),
+        transaction.source.type === TransactionType.income
+    )
   );
   const [expenses, setExpenses] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.expense,
-    ),
+        transaction.source.type === TransactionType.expense
+    )
   );
   const [receivables, setReceivables] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.receivable,
-    ),
+        transaction.source.type === TransactionType.receivable
+    )
   );
 
   return (
@@ -65,32 +65,38 @@ export default function Home(
                   fontWeight="500"
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                  }}
-                >
+                    alignItems: "center"
+                  }}>
                   <CalendarMonthIcon style={{ marginRight: 10 }} />
-                  {dayjs().format("DD-MM-YYYY")}
+                  from&nbsp;{dayjs().format("DD-MM-YYYY")}&nbsp;to&nbsp;
+                  {dayjs().add(30, "day").format("DD-MM-YYYY")}
                 </Typography>
+
                 <ExpensePieChart
-                  totalIncome={incomes.reduce(
+                  totalBalance={incomes.reduce(
                     (acc, income) => acc + income.amount,
-                    0,
+                    0
                   )}
                   totalExpense={expenses.reduce(
                     (acc, expense) => acc + expense.amount,
-                    0,
+                    0
                   )}
+                  totalIncome={0}
+                  // totalIncome={incomes.reduce(
+                  // (acc, income) => acc + income.amount,
+                  //0
+                  //)}
                 />
               </Grid>
             </Grid>
-            <Grid container spacing={2} py={5}>
-              <Grid item xs={12}>
+            <Grid container spacing={2} py={5} style={{ height: "100%" }}>
+              <Grid item style={{ height: "100%" }} xs={12}>
                 <IncomeTable incomes={incomes} setIncomes={setIncomes} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item style={{ height: "100%" }} xs={12}>
                 <ExpenseTable expenses={expenses} setExpenses={setExpenses} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item style={{ height: "100%" }} xs={12}>
                 <ReceivableTable
                   receivables={receivables}
                   setReceivables={setReceivables}
@@ -111,14 +117,14 @@ export async function getServerSideProps() {
     params: {
       // Example params, adjust according to your API's capability
       startDate: dayjs().toISOString(),
-      endDate: dayjs().add(30, "day").toISOString(),
-    },
+      endDate: dayjs().add(30, "day").toISOString()
+    }
   });
   const transactions = response.data;
 
   return {
     props: {
-      transactions,
-    },
+      transactions
+    }
   };
 }
