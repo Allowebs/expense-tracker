@@ -71,22 +71,40 @@ export default function Home(
                   from&nbsp;{dayjs().format("DD-MM-YYYY")}&nbsp;to&nbsp;
                   {dayjs().add(30, "day").format("DD-MM-YYYY")}
                 </Typography>
-
                 <ExpensePieChart
-                  totalBalance={incomes.reduce(
-                    (acc, income) => acc + income.amount,
-                    0
-                  )}
                   totalExpense={expenses.reduce(
                     (acc, expense) => acc + expense.amount,
                     0
                   )}
-                  totalIncome={0}
-                  // totalIncome={incomes.reduce(
-                  // (acc, income) => acc + income.amount,
-                  //0
-                  //)}
+                  totalBalance={0}
+                  totalIncome={incomes.reduce(
+                    (acc, income) => acc + income.amount,
+                    0
+                  )}
                 />
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="h5" fontWeight="500">
+                      Income
+                    </Typography>
+                    <Typography variant="h6" color="gray">
+                      {incomes.reduce((acc, income) => acc + income.amount, 0)}{" "}
+                      $
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="h5" fontWeight="500">
+                      Expenses
+                    </Typography>
+                    <Typography variant="h6" color="gray">
+                      {expenses.reduce(
+                        (acc, expense) => acc + expense.amount,
+                        0
+                      )}
+                      $
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
             <Grid container spacing={2} py={5} style={{ height: "100%" }}>
