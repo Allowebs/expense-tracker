@@ -12,25 +12,25 @@ import Head from "next/head";
 import { useState } from "react";
 
 export default function Home(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   const [incomes, setIncomes] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.income
-    )
+        transaction.source.type === TransactionType.income,
+    ),
   );
   const [expenses, setExpenses] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.expense
-    )
+        transaction.source.type === TransactionType.expense,
+    ),
   );
   const [receivables, setReceivables] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.receivable
-    )
+        transaction.source.type === TransactionType.receivable,
+    ),
   );
 
   return (
@@ -63,22 +63,31 @@ export default function Home(
                   ${expenses.reduce((acc, expense) => acc + expense.amount, 0)}
                 </p>
               </div>
+              <div>
+                <h2 className="text-xl font-medium">Balance</h2>
+                <p className="text-gray-600">
+                  $
+                  {incomes.reduce((acc, income) => acc + income.amount, 0) -
+                    expenses.reduce((acc, expense) => acc + expense.amount, 0)}
+                </p>
+              </div>
             </div>
             <ExpensePieChart
               totalExpense={expenses.reduce(
                 (acc, expense) => acc + expense.amount,
-                0
+                0,
               )}
               totalIncome={incomes.reduce(
                 (acc, income) => acc + income.amount,
-                0
+                0,
               )}
               totalBalance={0}
             />
           </div>
           <div
             className="grid grid-cols-1 gap-12 mt-5"
-            style={{ gridTemplateColumns: "repeat(1, minmax(100%, auto))" }}>
+            style={{ gridTemplateColumns: "repeat(1, minmax(100%, auto))" }}
+          >
             <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-5">
               <IncomeTable incomes={incomes} setIncomes={setIncomes} />
             </div>
@@ -105,14 +114,14 @@ export async function getServerSideProps() {
     params: {
       // Example params, adjust according to your API's capability
       startDate: dayjs().toISOString(),
-      endDate: dayjs().add(30, "day").toISOString()
-    }
+      endDate: dayjs().add(30, "day").toISOString(),
+    },
   });
   const transactions = response.data;
 
   return {
     props: {
-      transactions
-    }
+      transactions,
+    },
   };
 }

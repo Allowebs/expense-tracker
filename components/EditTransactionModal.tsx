@@ -19,18 +19,18 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4
+  p: 4,
 };
 
 const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
   income,
   editIncome,
   isEditModalVisible,
-  setIsEditModalVisible
+  setIsEditModalVisible,
 }) => {
   const [editedIncome, setEditedIncome] = useState<TransactionDataType>(income);
   const [createdAtInput, setCreatedAtInput] = useState<string>(
-    dayjs(income.createdAt).format("YYYY-MM-DD")
+    dayjs(income.createdAt).format("YYYY-MM-DD"),
   );
 
   useEffect(() => {
@@ -48,13 +48,13 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
       amount: editedIncome.amount,
       createdAt: new Date(createdAtInput).toISOString(),
       received: editedIncome.received,
-      sourceId: editedIncome.source.id // Ensure this matches the structure of your TransactionDataType
+      sourceId: editedIncome.source.id, // Ensure this matches the structure of your TransactionDataType
     };
 
     const response = await fetch(`/api/transaction/${editedIncome.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatePayload)
+      body: JSON.stringify(updatePayload),
     });
 
     if (response.ok) {
@@ -63,7 +63,7 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
       // Adjust as necessary to fit the expected structure, particularly for dates
       editIncome({
         ...updatedTransaction,
-        createdAt: new Date(updatedTransaction.createdAt)
+        createdAt: new Date(updatedTransaction.createdAt),
       });
       setIsEditModalVisible(false);
     } else {
@@ -78,7 +78,7 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
     } else {
       setEditedIncome((prev) => ({
         ...prev,
-        [name]: name === "amount" ? parseInt(value, 10) : value
+        [name]: name === "amount" ? parseInt(value, 10) : value,
       }));
     }
   };
@@ -88,12 +88,14 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
       open={isEditModalVisible}
       onClose={handleClose}
       aria-labelledby="edit-transaction-modal-title"
-      aria-describedby="edit-transaction-modal-description">
+      aria-describedby="edit-transaction-modal-description"
+    >
       <Box sx={style}>
         <Typography
           id="edit-transaction-modal-title"
           variant="h6"
-          component="h2">
+          component="h2"
+        >
           Modifier la transaction
         </Typography>
         <TextField

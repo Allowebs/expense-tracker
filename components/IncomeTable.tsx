@@ -14,7 +14,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import dayjs from "dayjs";
 import React, { useState } from "react";
@@ -42,11 +42,11 @@ export const IncomeTable = ({ incomes, setIncomes }: IncomeTableType) => {
   const deleteIncome = async (id: string) => {
     try {
       const response = await fetch(`/api/transaction/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
       if (!response.ok) throw new Error("Error deleting transaction");
       setIncomes((prevIncomes) =>
-        prevIncomes.filter((income) => income.id !== id)
+        prevIncomes.filter((income) => income.id !== id),
       );
     } catch (error) {
       console.error("Failed to delete transaction:", error);
@@ -55,7 +55,7 @@ export const IncomeTable = ({ incomes, setIncomes }: IncomeTableType) => {
 
   const editIncome = (data: TransactionDataType) => {
     setIncomes((prevIncomes) =>
-      prevIncomes.map((income) => (income.id === data.id ? data : income))
+      prevIncomes.map((income) => (income.id === data.id ? data : income)),
     );
   };
 

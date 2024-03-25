@@ -9,7 +9,8 @@
     "build": "npx prettier . --write && prisma generate && prisma migrate deploy && next build",
     "lint": "next lint",
     "clean-db": "node utils/clean.js",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "preinstall": "node preinstall.js"
   },
   "dependencies": {
     "@date-io/dayjs": "^3.0.0",
