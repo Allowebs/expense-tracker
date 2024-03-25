@@ -1,24 +1,24 @@
-import { PrismaClient } from "@prisma/client";
-import dayjs from "dayjs";
-import { NextApiRequest, NextApiResponse } from "next";
+// pages/api/transaction/get/[...slug].ts
+import { PrismaClient } from '@prisma/client';
+import dayjs from 'dayjs';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const prisma = new PrismaClient();
 
-const getTransactionsByType = async (
+const getTransactionsInRange = async (
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) => {
   try {
-    const { slug } = req.query;
-    const month = slug?.[0];
-    const year = slug?.[1];
-    const endDate = dayjs(`${year}-${month}`).endOf("month").toISOString();
-    const startDate = dayjs(`${year}-${month}`).startOf("month").toISOString();
+    // Calculate start and end dates
+    const startDate = dayjs().toISOString(); // Current date
+    const endDate = dayjs().add(30, 'day').toISOString(); // 30 days from current date
+
     const result = await prisma.transaction.findMany({
       where: {
         createdAt: {
-          lte: endDate,
           gte: startDate,
+          lte: endDate,
         },
       },
       include: {
@@ -27,11 +27,11 @@ const getTransactionsByType = async (
     });
     res.status(200).json(result);
   } catch (err) {
-    console.log(err);
-    res.status(403).json({
-      err: "Error occured while getting transactions.",
+    console.error(err);
+    res.status(500).json({
+      error: 'Error occurred while getting transactions.',
     });
   }
 };
 
-export default getTransactionsByType;
+export default getTransactionsInRange;

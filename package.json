@@ -7,7 +7,8 @@
     "start": "next start",
     "build-local": "prisma generate && prisma migrate dev && next build",
     "build": "prisma generate && prisma migrate deploy && next build",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean-db": "node utils/clean.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -30,6 +31,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-google-charts": "^4.0.1",
+    "react-query": "^3.39.3",
     "typescript": "5.4.3"
   },
   "devDependencies": {
