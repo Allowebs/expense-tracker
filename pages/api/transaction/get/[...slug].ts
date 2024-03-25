@@ -1,4 +1,3 @@
-// pages/api/transaction/get/[...slug].ts
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -10,21 +9,39 @@ const getTransactionsInRange = async (
   res: NextApiResponse,
 ) => {
   try {
-    // Calculate start and end dates
-    const startDate = dayjs().toISOString(); // Current date
-    const endDate = dayjs().add(30, "day").toISOString(); // 30 days from current date
+    // Calculate the current date and the date 30 days from now
+    const startDate = dayjs().toISOString();
+    const endDate = dayjs().add(30, "day").toISOString();
 
     const result = await prisma.transaction.findMany({
       where: {
         OR: [
           {
-            // For Income transactions, ignore the date range
+            // Transactions whose source name contains "Carte de Credit"
             source: {
-              type: "Income", // Match the string directly
+              name: {
+                contains: "Carte de Credit",
+              },
             },
           },
           {
-            // For other types, apply the date range filter
+            // Transactions of type "Income" or "Receivable" regardless of the date
+            OR: [
+              {
+                source: {
+                  type: "Income",
+                },
+              },
+              {
+                source: {
+                  type: "Receivable",
+                },
+              },
+            ],
+          },
+          {
+            // Other transactions within the date range, excluding "Income" 
+            // and transactions with "Carte de Credit" in the source name
             AND: [
               {
                 createdAt: {
@@ -33,10 +50,26 @@ const getTransactionsInRange = async (
                 },
               },
               {
-                source: {
-                  type: {
-                    not: "Income", // Match the string directly for not Income
-                  },
+                NOT: {
+                  OR: [
+                    {
+                      source: {
+                        type: "Income",
+                      },
+                    },
+                    {
+                      source: {
+                        type: "Receivable",
+                      },
+                    },
+                    {
+                      source: {
+                        name: {
+                          contains: "Carte de Credit",
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             ],
@@ -47,6 +80,7 @@ const getTransactionsInRange = async (
         source: true, // Include source details in the result
       },
     });
+
     res.status(200).json(result);
   } catch (err) {
     console.error(err);

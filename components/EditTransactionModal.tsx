@@ -1,5 +1,4 @@
-// components/EditTransactionModal.tsx
-import { TransactionDataType } from "@/types"; // Ensure this import matches your file structure
+import { TransactionDataType } from "@/types";
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 
@@ -34,16 +33,42 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
     setIsEditModalVisible(false);
   };
 
-  const handleSave = () => {
-    editIncome(editedIncome);
-    setIsEditModalVisible(false);
+  const handleSave = async () => {
+    // Prepare the transaction data for the API call, excluding the 'source' object
+    const updatePayload = {
+      amount: editedIncome.amount,
+      createdAt: editedIncome.createdAt,
+      received: editedIncome.received,
+      // Assuming the source hasn't changed, so we just ensure 'sourceId' is included
+      sourceId: editedIncome.source.id,
+    };
+
+    const response = await fetch(`/api/transaction/${editedIncome.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatePayload),
+    });
+
+    if (response.ok) {
+      // Assuming the API returns the updated transaction with the source object included
+      const updatedTransaction = await response.json();
+      editIncome(updatedTransaction); // Update state with the returned transaction
+      setIsEditModalVisible(false);
+    } else {
+      console.error("Failed to update transaction");
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setEditedIncome((prev) => ({
       ...prev,
-      [name]: name === "amount" ? parseInt(value, 10) : value,
+      [name]:
+        name === "amount"
+          ? parseInt(value, 10)
+          : name === "createdAt"
+            ? new Date(value)
+            : value,
     }));
   };
 
@@ -75,17 +100,35 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
         />
         <TextField
           margin="dense"
+          id="createdAt"
+          name="createdAt"
+          label="Date"
+          type="date"
+          fullWidth
+          variant="outlined"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={
+            editedIncome.createdAt instanceof Date
+              ? editedIncome.createdAt.toISOString().split("T")[0]
+              : editedIncome.createdAt
+          }
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
           id="source-name"
-          name="source"
-          label="Source Name"
+          name="sourceId"
+          label="Source ID"
           type="text"
           fullWidth
           variant="outlined"
-          value={editedIncome.source.name}
+          value={editedIncome.sourceId}
           onChange={(e) =>
             setEditedIncome((prev) => ({
               ...prev,
-              source: { ...prev.source, name: e.target.value },
+              sourceId: e.target.value,
             }))
           }
         />

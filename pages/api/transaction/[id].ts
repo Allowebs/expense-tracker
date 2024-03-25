@@ -1,7 +1,8 @@
 // pages/api/transaction/[id].ts
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
+// Instantiate PrismaClient (consider moving outside the handler for reuse)
 const prisma = new PrismaClient();
 
 export default async function handler(
@@ -38,15 +39,16 @@ export default async function handler(
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
-    if (error instanceof Error) {
-      // You can customize the error response based on error type or message
-      // For instance, Prisma throws a PrismaClientKnownRequestError for known database errors
-      console.error("Error handling transaction:", error.message);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      // Handle known request errors from Prisma
+      console.error("Known error:", error.meta);
+      return res.status(500).json({ message: error.message });
+    } else if (error instanceof Error) {
+      // General error handling
+      console.error("Error:", error.message);
       return res.status(500).json({ message: "Internal server error" });
     }
-
-    // Fallback error response for unexpected errors
-    console.error("Unexpected error handling transaction:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    // Fallback for other types of errors
+    return res.status(500).json({ message: "An unexpected error occurred" });
   }
 }

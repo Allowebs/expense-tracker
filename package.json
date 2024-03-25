@@ -11,6 +11,7 @@
     "clean-db": "node utils/clean.js"
   },
   "dependencies": {
+    "@date-io/dayjs": "^3.0.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.14",

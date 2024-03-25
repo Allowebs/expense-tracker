@@ -10,18 +10,35 @@ const getTransactions = async (req: NextApiRequest, res: NextApiResponse) => {
     const startDate = dayjs().toISOString();
     const endDate = dayjs().add(30, "day").toISOString();
 
-    // Fetch transactions, for Income transactions ignore the date range
     const result = await prisma.transaction.findMany({
       where: {
         OR: [
           {
-            // Include all transactions of type "Income" regardless of the date
+            // Transactions whose source name contains "Carte de Credit"
             source: {
-              type: "Income", // Assuming 'Income' is the correct identifier in your database
+              name: {
+                contains: "Carte de Credit",
+              },
             },
           },
           {
-            // For other transactions, apply the date range filter
+            // Transactions of type "Income" or "Receivable" regardless of the date
+            OR: [
+              {
+                source: {
+                  type: "Income",
+                },
+              },
+              {
+                source: {
+                  type: "Receivable",
+                },
+              },
+            ],
+          },
+          {
+            // Other transactions within the date range, excluding "Income" 
+            // and transactions with "Carte de Credit" in the source name
             AND: [
               {
                 createdAt: {
@@ -30,10 +47,26 @@ const getTransactions = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
               },
               {
-                source: {
-                  type: {
-                    not: "Income", // Exclude "Income" transactions from this date filter
-                  },
+                NOT: {
+                  OR: [
+                    {
+                      source: {
+                        type: "Income",
+                      },
+                    },
+                    {
+                      source: {
+                        type: "Receivable",
+                      },
+                    },
+                    {
+                      source: {
+                        name: {
+                          contains: "Carte de Credit",
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             ],
@@ -41,15 +74,15 @@ const getTransactions = async (req: NextApiRequest, res: NextApiResponse) => {
         ],
       },
       include: {
-        source: true, // Include source details
+        source: true, // Include source details in the result
       },
     });
 
     res.status(200).json(result);
   } catch (err) {
-    console.error(err); // Changed to console.error for better error logging
+    console.error(err);
     res.status(500).json({
-      error: "Error occurred while getting transactions.", // Changed 'err' to 'error' for consistency
+      error: "Error occurred while getting transactions.",
     });
   }
 };
