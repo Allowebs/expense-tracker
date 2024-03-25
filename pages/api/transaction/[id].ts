@@ -1,44 +1,38 @@
-// pages/api/transaction/[id].ts
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
-// Instantiate PrismaClient (consider moving outside the handler for reuse)
 const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const transactionId = req.query.id;
 
   if (!transactionId || typeof transactionId !== "string") {
-    return res
-      .status(400)
-      .json({ message: "Transaction ID must be provided and be a string." });
+    return res.status(400).json({ message: "Transaction ID must be provided and be a string." });
   }
 
   try {
     switch (req.method) {
-      case "DELETE":
-        // Delete a transaction
-        const deleteTransaction = await prisma.transaction.delete({
-          where: { id: transactionId },
-        });
-        return res.json(deleteTransaction);
-
       case "PUT":
-        // Update a transaction
         const updateTransaction = await prisma.transaction.update({
           where: { id: transactionId },
           data: req.body,
         });
         return res.json(updateTransaction);
 
+      case "DELETE":
+        const deleteTransaction = await prisma.transaction.delete({
+          where: { id: transactionId },
+        });
+        return res.json(deleteTransaction);
+
       default:
         res.setHeader("Allow", ["DELETE", "PUT"]);
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       // Handle known request errors from Prisma
       console.error("Known error:", error.meta);

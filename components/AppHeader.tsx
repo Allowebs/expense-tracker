@@ -7,7 +7,7 @@ export const AppHeader = () => {
     <AppBar component={"nav"}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Personal Budget
+          Budget personnel
         </Typography>
       </Toolbar>
     </AppBar>

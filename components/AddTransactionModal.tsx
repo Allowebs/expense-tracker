@@ -66,8 +66,8 @@ export const AddTransactionModal = ({
     }
   };
 
-  const cardHeaderTitle = `Add ${source}`;
-  const cardHeaderSubHeader = `Add your ${source} for a specific date of the month.`;
+  const cardHeaderTitle = `Ajouter ${source}`;
+  const cardHeaderSubHeader = `Ajoutez votre ${source} pour une date spécifique du mois.`;
 
   useEffect(() => {
     const getSourcesByType = async () => {
@@ -136,11 +136,11 @@ export const AddTransactionModal = ({
 
             <FormControl fullWidth style={{ marginTop: 20 }}>
               <InputLabel htmlFor={`${source}-source-amount`}>
-                Amount
+                Montant
               </InputLabel>
               <OutlinedInput
                 id={`${source}-source-amount`}
-                label="Amount"
+                label="Montant"
                 size="medium"
                 type="number"
                 value={amount}
@@ -161,7 +161,7 @@ export const AddTransactionModal = ({
         autoHideDuration={3000}
         onClose={() => setIsTransactionCreated(false)}
       >
-        <Alert severity="success">{`${source} added successfully!`}</Alert>
+        <Alert severity="success">{`${source} ajouté avec succès !`}</Alert>
       </Snackbar>
     </>
   );

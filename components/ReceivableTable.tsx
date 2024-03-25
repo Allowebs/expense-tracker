@@ -89,7 +89,7 @@ export const ReceivableTable = ({
   };
 
   return (
-    <Card>
+    <Card style={{ margin: "1rem" }}>
       <CardHeader
         title="Receivable"
         subheader={`Total - ${receivables.reduce(
@@ -105,8 +105,8 @@ export const ReceivableTable = ({
               <TableRow>
                 <TableCell>Source</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell align="right">Amount($)</TableCell>
-                <TableCell>Paid</TableCell>
+                <TableCell align="right">Montant ($)</TableCell>
+                <TableCell>Payé</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -142,10 +142,10 @@ export const ReceivableTable = ({
       </CardContent>
       <CardActions>
         <Button onClick={() => setIsCreateReceivableSourceModalVisible(true)}>
-          Create Source
+          Créer une source
         </Button>
         <Button onClick={() => setIsAddReceivableModalVisible(true)}>
-          Add Receivable
+          Ajouter un compte à recevoir
         </Button>
       </CardActions>
       <CreateSourceModal

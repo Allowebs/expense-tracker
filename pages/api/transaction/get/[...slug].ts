@@ -40,7 +40,7 @@ const getTransactionsInRange = async (
             ],
           },
           {
-            // Other transactions within the date range, excluding "Income" 
+            // Other transactions within the date range, excluding "Income"
             // and transactions with "Carte de Credit" in the source name
             AND: [
               {

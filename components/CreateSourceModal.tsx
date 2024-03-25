@@ -30,21 +30,20 @@ export const CreateSourceModal = ({
 
   const cardHeaderTitle =
     source === TransactionType.income
-      ? "Create Payor"
+      ? "Créer un payeur"
       : source === TransactionType.expense
-        ? "Create Payee"
+        ? "Créer un bénéficiaire"
         : source === TransactionType.receivable
-          ? "Create Receivable Source"
-          : "Create Investment Source";
-
+          ? "Créer une source de créances"
+          : "Créer une source d'investissement";
   const cardHeaderSubHeader =
     source === TransactionType.income
-      ? "Create the source from whom you will receive the payment."
+      ? "Créez la source de laquelle vous recevrez le paiement."
       : source === TransactionType.expense
-        ? "Create the source to whom you have spent your money."
+        ? "Créez la source à laquelle vous avez dépensé votre argent."
         : source === TransactionType.receivable
-          ? "Create the source you have owed the money"
-          : "Create the source to whom you have invested your money.";
+          ? "Créez la source à laquelle vous devez de l'argent"
+          : "Créez la source dans laquelle vous avez investi votre argent.";
 
   const createSource = async () => {
     try {
@@ -112,7 +111,7 @@ export const CreateSourceModal = ({
         autoHideDuration={3000}
         onClose={() => setIsSourceCreated(false)}
       >
-        <Alert severity="success">{`${source} source created successfully!`}</Alert>
+        <Alert severity="success">{`${source} source créée avec succès !`}</Alert>
       </Snackbar>
     </>
   );

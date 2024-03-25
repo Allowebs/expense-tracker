@@ -1,4 +1,3 @@
-// components/IncomeTable.tsx
 import { TransactionDataType, TransactionType } from "@/types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -46,7 +45,6 @@ export const IncomeTable = ({ incomes, setIncomes }: IncomeTableType) => {
         method: "DELETE"
       });
       if (!response.ok) throw new Error("Error deleting transaction");
-      // Filter out the deleted expense from the local state to update the UI
       setIncomes((prevIncomes) =>
         prevIncomes.filter((income) => income.id !== id)
       );
@@ -67,13 +65,10 @@ export const IncomeTable = ({ incomes, setIncomes }: IncomeTableType) => {
   };
 
   return (
-    <Card>
+    <Card style={{ margin: "1rem" }}>
       <CardHeader
         title={TransactionType.income}
-        subheader={`Total - ${incomes.reduce(
-          (acc, income) => acc + income.amount,
-          0
-        )}`}
+        subheader={`Total - ${incomes.reduce((acc, income) => acc + income.amount, 0)}`}
         subheaderTypographyProps={{ style: { fontWeight: "bold" } }}
       />
       <CardContent style={{ padding: 0 }}>
@@ -83,14 +78,13 @@ export const IncomeTable = ({ incomes, setIncomes }: IncomeTableType) => {
               <TableRow>
                 <TableCell>Source</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell align="right">Amount($)</TableCell>
+                <TableCell align="right">Montant ($)</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {incomes.map((income) => (
                 <TableRow key={income.id}>
-                  {/* Check if income.source is defined before accessing its name */}
                   <TableCell>
                     {income.source ? income.source.name : "Unknown Source"}
                   </TableCell>
@@ -114,23 +108,27 @@ export const IncomeTable = ({ incomes, setIncomes }: IncomeTableType) => {
       </CardContent>
       <CardActions>
         <Button onClick={() => setIsCreatePayerModalVisible(true)}>
-          Create Payer
+          Créer un payeur
         </Button>
         <Button onClick={() => setIsAddIncomeModalVisible(true)}>
-          Add Income
+          Ajouter un revenu
         </Button>
       </CardActions>
-      <CreateSourceModal
-        source={TransactionType.income}
-        isCreateSourceModalVisible={isCreatePayerModalVisible}
-        setIsCreateSourceModalVisible={setIsCreatePayerModalVisible}
-      />
-      <AddTransactionModal
-        source={TransactionType.income}
-        addTransaction={addIncome}
-        isAddSourceModalVisible={isAddIncomeModalVisible}
-        setIsAddSourceModalVisible={setIsAddIncomeModalVisible}
-      />
+      {isCreatePayerModalVisible && (
+        <CreateSourceModal
+          source={TransactionType.income}
+          isCreateSourceModalVisible={isCreatePayerModalVisible}
+          setIsCreateSourceModalVisible={setIsCreatePayerModalVisible}
+        />
+      )}
+      {isAddIncomeModalVisible && (
+        <AddTransactionModal
+          source={TransactionType.income}
+          addTransaction={addIncome}
+          isAddSourceModalVisible={isAddIncomeModalVisible}
+          setIsAddSourceModalVisible={setIsAddIncomeModalVisible}
+        />
+      )}
       {editingIncome && (
         <EditTransactionModal
           income={editingIncome}

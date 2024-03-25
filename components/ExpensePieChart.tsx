@@ -26,6 +26,12 @@ export function ExpensePieChart({
   }, [totalExpense, totalIncome, totalBalance]);
 
   return (
-    <Chart chartType="PieChart" data={data} options={options} width={"100%"} />
+    <Chart
+      chartType="PieChart"
+      data={data}
+      options={options}
+      width={"100%"}
+      style={{ margin: "1rem" }}
+    />
   );
 }

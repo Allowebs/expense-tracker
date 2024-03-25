@@ -3,12 +3,8 @@ import { ExpensePieChart } from "@/components/ExpensePieChart";
 import { ExpenseTable } from "@/components/ExpenseTable";
 import { IncomeTable } from "@/components/IncomeTable";
 import { ReceivableTable } from "@/components/ReceivableTable";
-import styles from "@/styles/Home.module.css";
 import { TransactionDataType, TransactionType } from "@/types";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import { CalendarIcon } from "@mui/x-date-pickers/icons";
 import axios from "axios";
 import dayjs from "dayjs";
 import { InferGetServerSidePropsType } from "next";
@@ -45,85 +41,59 @@ export default function Home(
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main}`}>
-        <Container>
+      <div className="main py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AppHeader />
-          <Grid container>
-            <Grid container spacing={5}>
-              <Grid item xs={12}>
-                <Typography variant="h3" fontWeight="700">
-                  Expense Tracker
-                </Typography>
-                <Typography color={"gray"} variant="h6">
-                  This app is built for you to manage your income and expenses
-                  with ease.
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  variant="h5"
-                  fontWeight="500"
-                  style={{
-                    display: "flex",
-                    alignItems: "center"
-                  }}>
-                  <CalendarMonthIcon style={{ marginRight: 10 }} />
-                  from&nbsp;{dayjs().format("DD-MM-YYYY")}&nbsp;to&nbsp;
-                  {dayjs().add(30, "day").format("DD-MM-YYYY")}
-                </Typography>
-                <ExpensePieChart
-                  totalExpense={expenses.reduce(
-                    (acc, expense) => acc + expense.amount,
-                    0
-                  )}
-                  totalBalance={0}
-                  totalIncome={incomes.reduce(
-                    (acc, income) => acc + income.amount,
-                    0
-                  )}
-                />
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h5" fontWeight="500">
-                      Income
-                    </Typography>
-                    <Typography variant="h6" color="gray">
-                      {incomes.reduce((acc, income) => acc + income.amount, 0)}{" "}
-                      $
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h5" fontWeight="500">
-                      Expenses
-                    </Typography>
-                    <Typography variant="h6" color="gray">
-                      {expenses.reduce(
-                        (acc, expense) => acc + expense.amount,
-                        0
-                      )}
-                      $
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} py={5} style={{ height: "100%" }}>
-              <Grid item style={{ height: "100%" }} xs={12}>
-                <IncomeTable incomes={incomes} setIncomes={setIncomes} />
-              </Grid>
-              <Grid item style={{ height: "100%" }} xs={12}>
-                <ExpenseTable expenses={expenses} setExpenses={setExpenses} />
-              </Grid>
-              <Grid item style={{ height: "100%" }} xs={12}>
-                <ReceivableTable
-                  receivables={receivables}
-                  setReceivables={setReceivables}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Container>
-      </main>
+          <div className="mt-5">
+            <div className="flex items-center text-lg font-medium my-5">
+              <CalendarIcon className="w-5 h-5 mr-2 text-gray-700" />
+              from {dayjs().format("DD-MM-YYYY")} to{" "}
+              {dayjs().add(30, "day").format("DD-MM-YYYY")}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+              <div>
+                <h2 className="text-xl font-medium">Income</h2>
+                <p className="text-gray-600">
+                  ${incomes.reduce((acc, income) => acc + income.amount, 0)}
+                </p>
+              </div>
+              <div>
+                <h2 className="text-xl font-medium">Expenses</h2>
+                <p className="text-gray-600">
+                  ${expenses.reduce((acc, expense) => acc + expense.amount, 0)}
+                </p>
+              </div>
+            </div>
+            <ExpensePieChart
+              totalExpense={expenses.reduce(
+                (acc, expense) => acc + expense.amount,
+                0
+              )}
+              totalIncome={incomes.reduce(
+                (acc, income) => acc + income.amount,
+                0
+              )}
+              totalBalance={0}
+            />
+          </div>
+          <div
+            className="grid grid-cols-1 gap-12 mt-5"
+            style={{ gridTemplateColumns: "repeat(1, minmax(100%, auto))" }}>
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-5">
+              <IncomeTable incomes={incomes} setIncomes={setIncomes} />
+            </div>
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-5">
+              <ExpenseTable expenses={expenses} setExpenses={setExpenses} />
+            </div>
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-5">
+              <ReceivableTable
+                receivables={receivables}
+                setReceivables={setReceivables}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

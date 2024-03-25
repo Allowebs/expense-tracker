@@ -69,7 +69,7 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
   };
 
   return (
-    <Card>
+    <Card style={{ margin: "1rem" }}>
       <CardHeader
         title={TransactionType.expense}
         subheader={`Total - ${expenses.reduce(
@@ -85,7 +85,7 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
               <TableRow>
                 <TableCell>Source</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell align="right">Amount($)</TableCell>
+                <TableCell align="right">Montant ($)</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -113,10 +113,10 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
       </CardContent>
       <CardActions>
         <Button onClick={() => setIsCreatePayeeModalVisible(true)}>
-          Create Payee
+          Créer un bénéficiaire
         </Button>
         <Button onClick={() => setIsAddExpenseModalVisible(true)}>
-          Add Expense
+          Ajouter une dépense
         </Button>
       </CardActions>
       <CreateSourceModal
