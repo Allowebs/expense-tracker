@@ -19,14 +19,14 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4
+  p: 4,
 };
 
 const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
   income,
   editIncome,
   isEditModalVisible,
-  setIsEditModalVisible
+  setIsEditModalVisible,
 }) => {
   const [editedIncome, setEditedIncome] = useState<TransactionDataType>(income);
 
@@ -43,7 +43,7 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
     const { name, value } = event.target;
     setEditedIncome((prev) => ({
       ...prev,
-      [name]: name === "amount" ? parseInt(value, 10) : value
+      [name]: name === "amount" ? parseInt(value, 10) : value,
     }));
   };
 
@@ -52,12 +52,14 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
       open={isEditModalVisible}
       onClose={handleClose}
       aria-labelledby="edit-transaction-modal-title"
-      aria-describedby="edit-transaction-modal-description">
+      aria-describedby="edit-transaction-modal-description"
+    >
       <Box sx={style}>
         <Typography
           id="edit-transaction-modal-title"
           variant="h6"
-          component="h2">
+          component="h2"
+        >
           Edit Transaction
         </Typography>
         <TextField
@@ -83,7 +85,7 @@ const EditTransactionModal: React.FC<EditTransactionModalProps> = ({
           onChange={(e) =>
             setEditedIncome((prev) => ({
               ...prev,
-              source: { ...prev.source, name: e.target.value }
+              source: { ...prev.source, name: e.target.value },
             }))
           }
         />

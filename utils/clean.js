@@ -1,5 +1,5 @@
 // prisma-clean.js
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function cleanDatabase() {
@@ -10,7 +10,7 @@ async function cleanDatabase() {
   await prisma.source.deleteMany({});
   // Repeat the above line for other entities, ensuring you respect foreign key constraints
 
-  console.log('Database cleaned successfully.');
+  console.log("Database cleaned successfully.");
 }
 
 cleanDatabase()

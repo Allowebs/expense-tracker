@@ -15,7 +15,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import dayjs from "dayjs";
 import React, { useState } from "react";
@@ -44,12 +44,12 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
   const deleteExpense = async (id: string) => {
     try {
       const response = await fetch(`/api/transaction/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
       if (!response.ok) throw new Error("Error deleting transaction");
       // Filter out the deleted expense from the local state to update the UI
       setExpenses((prevExpenses) =>
-        prevExpenses.filter((expense) => expense.id !== id)
+        prevExpenses.filter((expense) => expense.id !== id),
       );
     } catch (error) {
       console.error("Failed to delete transaction:", error);
@@ -59,7 +59,7 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
 
   const editExpense = (data: TransactionDataType) => {
     setExpenses((prevExpenses) =>
-      prevExpenses.map((expense) => (expense.id === data.id ? data : expense))
+      prevExpenses.map((expense) => (expense.id === data.id ? data : expense)),
     );
   };
 
@@ -74,14 +74,15 @@ export const ExpenseTable = ({ expenses, setExpenses }: ExpenseTableType) => {
         title={TransactionType.expense}
         subheader={`Total - ${expenses.reduce(
           (acc, expense) => acc + expense.amount,
-          0
+          0,
         )}`}
         subheaderTypographyProps={{ style: { fontWeight: "bold" } }}
       />
       <CardContent style={{ padding: 0 }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}>
+          sx={{ maxHeight: 320, overflowY: "scroll" }}
+        >
           <Table stickyHeader>
             <TableHead>
               <TableRow>

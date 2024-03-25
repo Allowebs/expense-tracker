@@ -16,7 +16,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import dayjs from "dayjs";
 import React, { useState } from "react";
@@ -31,11 +31,11 @@ type ReceivableTableType = {
 
 export const ReceivableTable = ({
   receivables,
-  setReceivables
+  setReceivables,
 }: ReceivableTableType) => {
   const [
     isCreateReceivableSourceModalVisible,
-    setIsCreateReceivableSourceModalVisible
+    setIsCreateReceivableSourceModalVisible,
   ] = useState<boolean>(false);
   const [isAddReceivableModalVisible, setIsAddReceivableModalVisible] =
     useState<boolean>(false);
@@ -49,15 +49,15 @@ export const ReceivableTable = ({
 
   const deleteReceivable = (id: string) => {
     setReceivables((prevReceivable) =>
-      prevReceivable.filter((receivable) => receivable.id !== id)
+      prevReceivable.filter((receivable) => receivable.id !== id),
     );
   };
 
   const editReceivable = (data: TransactionDataType) => {
     setReceivables((prevReceivable) =>
       prevReceivable.map((receivable) =>
-        receivable.id === data.id ? data : receivable
-      )
+        receivable.id === data.id ? data : receivable,
+      ),
     );
   };
 
@@ -66,8 +66,8 @@ export const ReceivableTable = ({
       prevReceivable.map((receivable) =>
         receivable.id === id
           ? { ...receivable, received: paidStatus }
-          : receivable
-      )
+          : receivable,
+      ),
     );
   };
 
@@ -79,7 +79,7 @@ export const ReceivableTable = ({
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/transaction/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
       if (!response.ok) throw new Error("Error deleting transaction");
       deleteReceivable(id);
@@ -94,14 +94,15 @@ export const ReceivableTable = ({
         title="Receivable"
         subheader={`Total - ${receivables.reduce(
           (acc, receivable) => acc + receivable.amount,
-          0
+          0,
         )}`}
         subheaderTypographyProps={{ style: { fontWeight: "bold" } }}
       />
       <CardContent style={{ padding: 0 }}>
         <TableContainer
           component={Paper}
-          sx={{ maxHeight: 320, overflowY: "scroll" }}>
+          sx={{ maxHeight: 320, overflowY: "scroll" }}
+        >
           <Table>
             <TableHead>
               <TableRow>

@@ -33,12 +33,12 @@ export const AddTransactionModal = ({
   source,
   isAddSourceModalVisible,
   setIsAddSourceModalVisible,
-  addTransaction
+  addTransaction,
 }: AddTransactionModalType) => {
   const [sources, setSources] = useState<Source[]>([]);
   const [selectedSource, setSelectedSource] = useState<Source | null>(null);
   const [transactionDate, setTransactionDate] = useState<Date | null>(
-    new Date()
+    new Date(),
   );
   const [amount, setAmount] = useState<number>(0);
   const [isTransactionCreated, setIsTransactionCreated] =
@@ -51,8 +51,8 @@ export const AddTransactionModal = ({
         {
           sourceId: selectedSource?.id,
           amount,
-          createdAt: transactionDate
-        }
+          createdAt: transactionDate,
+        },
       );
       if (response.status === 200) {
         setIsAddSourceModalVisible(false);
@@ -73,7 +73,7 @@ export const AddTransactionModal = ({
     const getSourcesByType = async () => {
       try {
         const response = await axios.get(
-          `${process.env.API_URL}/api/source/get/${source}`
+          `${process.env.API_URL}/api/source/get/${source}`,
         );
         const data: Source[] = response.data;
         setSources(data);
@@ -94,8 +94,9 @@ export const AddTransactionModal = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
-        }}>
+          alignItems: "center",
+        }}
+      >
         <Card style={{ width: 400 }}>
           <CardHeader
             title={cardHeaderTitle}
@@ -127,7 +128,7 @@ export const AddTransactionModal = ({
                 value={transactionDate ? dayjs(transactionDate) : null}
                 onChange={(value) =>
                   setTransactionDate(
-                    value && dayjs(value).isValid() ? value.toDate() : null
+                    value && dayjs(value).isValid() ? value.toDate() : null,
                   )
                 }
               />
@@ -158,7 +159,8 @@ export const AddTransactionModal = ({
       <Snackbar
         open={isTransactionCreated}
         autoHideDuration={3000}
-        onClose={() => setIsTransactionCreated(false)}>
+        onClose={() => setIsTransactionCreated(false)}
+      >
         <Alert severity="success">{`${source} added successfully!`}</Alert>
       </Snackbar>
     </>

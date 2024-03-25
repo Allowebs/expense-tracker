@@ -7,18 +7,18 @@ type ExpensePieChartType = {
 };
 
 export const options = {
-  title: "Expense Tracker"
+  title: "Expense Tracker",
 };
 
 export function ExpensePieChart({
   totalExpense,
-  totalIncome
+  totalIncome,
 }: ExpensePieChartType) {
   const data = useMemo(() => {
     return [
       ["Source", "Amount"],
       ["Income", totalIncome],
-      ["Expenses", totalExpense]
+      ["Expenses", totalExpense],
     ];
   }, [totalExpense, totalIncome]);
 

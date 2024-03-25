@@ -16,25 +16,25 @@ import Head from "next/head";
 import { useState } from "react";
 
 export default function Home(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   const [incomes, setIncomes] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.income
-    )
+        transaction.source.type === TransactionType.income,
+    ),
   );
   const [expenses, setExpenses] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.expense
-    )
+        transaction.source.type === TransactionType.expense,
+    ),
   );
   const [receivables, setReceivables] = useState<TransactionDataType[]>(
     props.transactions.filter(
       (transaction: TransactionDataType) =>
-        transaction.source.type === TransactionType.receivable
-    )
+        transaction.source.type === TransactionType.receivable,
+    ),
   );
 
   return (
@@ -65,19 +65,20 @@ export default function Home(
                   fontWeight="500"
                   style={{
                     display: "flex",
-                    alignItems: "center"
-                  }}>
+                    alignItems: "center",
+                  }}
+                >
                   <CalendarMonthIcon style={{ marginRight: 10 }} />
                   {dayjs().format("DD-MM-YYYY")}
                 </Typography>
                 <ExpensePieChart
                   totalIncome={incomes.reduce(
                     (acc, income) => acc + income.amount,
-                    0
+                    0,
                   )}
                   totalExpense={expenses.reduce(
                     (acc, expense) => acc + expense.amount,
-                    0
+                    0,
                   )}
                 />
               </Grid>
@@ -110,14 +111,14 @@ export async function getServerSideProps() {
     params: {
       // Example params, adjust according to your API's capability
       startDate: dayjs().toISOString(),
-      endDate: dayjs().add(30, "day").toISOString()
-    }
+      endDate: dayjs().add(30, "day").toISOString(),
+    },
   });
   const transactions = response.data;
 
   return {
     props: {
-      transactions
-    }
+      transactions,
+    },
   };
 }

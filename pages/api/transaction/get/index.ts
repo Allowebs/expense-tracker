@@ -8,7 +8,7 @@ const getTransactions = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     // Calculate the current date and the date 30 days from now
     const startDate = dayjs().toISOString();
-    const endDate = dayjs().add(30, 'day').toISOString();
+    const endDate = dayjs().add(30, "day").toISOString();
 
     // Fetch transactions, for Income transactions ignore the date range
     const result = await prisma.transaction.findMany({

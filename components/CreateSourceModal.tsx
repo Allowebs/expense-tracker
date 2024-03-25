@@ -23,7 +23,7 @@ type CreateSourceModalType = {
 export const CreateSourceModal = ({
   source,
   isCreateSourceModalVisible,
-  setIsCreateSourceModalVisible
+  setIsCreateSourceModalVisible,
 }: CreateSourceModalType) => {
   const [isSourceCreated, setIsSourceCreated] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -52,8 +52,8 @@ export const CreateSourceModal = ({
         `${process.env.API_URL}/api/source/create`,
         {
           name,
-          type: source
-        }
+          type: source,
+        },
       );
       if (response.status === 200) {
         setIsCreateSourceModalVisible(false);
@@ -73,12 +73,14 @@ export const CreateSourceModal = ({
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
-        }}>
+          alignItems: "center",
+        }}
+      >
         <Card
           style={{
-            width: 400
-          }}>
+            width: 400,
+          }}
+        >
           <CardHeader
             title={cardHeaderTitle}
             subheader={cardHeaderSubHeader}
@@ -108,7 +110,8 @@ export const CreateSourceModal = ({
       <Snackbar
         open={isSourceCreated}
         autoHideDuration={3000}
-        onClose={() => setIsSourceCreated(false)}>
+        onClose={() => setIsSourceCreated(false)}
+      >
         <Alert severity="success">{`${source} source created successfully!`}</Alert>
       </Snackbar>
     </>
