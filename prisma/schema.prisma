@@ -1,27 +1,24 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql" // Changed from "mongodb" to "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Source {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  id          String        @id @default(uuid()) // Changed from @default(auto()) @map("_id") @db.ObjectId
   name        String
   type        String
-  Transaction Transaction[]
+  Transaction Transaction[] // Relation to Transaction is maintained, no changes needed.
 }
 
 model Transaction {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  sourceId  String   @db.ObjectId
-  createdAt DateTime @default(now())
-  source    Source   @relation(fields: [sourceId], references: [id])
-  amount    Int
-  received  Boolean  @default(false)
+  id        String   @id @default(uuid()) // Adjusted for PostgreSQL with UUIDs.
+  sourceId  String // Reference to Source ID. In PostgreSQL, this can be a UUID.
+  createdAt DateTime @default(now()) // No change, as DateTime maps well to PostgreSQL.
+  source    Source   @relation(fields: [sourceId], references: [id]) // Relation definition remains the same.
+  amount    Int // No change needed, directly supported in PostgreSQL.
+  received  Boolean  @default(false) // No change, as Boolean is a supported type in PostgreSQL.
 }
